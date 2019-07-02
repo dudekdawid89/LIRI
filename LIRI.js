@@ -10,9 +10,8 @@ var spotify = new Spotify(keys.spotify);
 var userOption = process.argv[2];
 var userInput = process.argv[3];
 
-userInput(userOption, userInput);
 
-function userInput(userOption, userInput){
+var userInputData = function(userOption, userInput){
     switch(userOption){
         case 'concert-this':
             concertData(userInput);
@@ -28,6 +27,7 @@ function userInput(userOption, userInput){
             console.log("Wrong Option. Please use this options to proceed: concert-this, spotify-this-song, movie-this, do-what-it-says");
     }
 }
+userInputData(userOption, userInput);
 
 var concertData = function(userInput){
     if(userInput === undefined){
@@ -44,7 +44,7 @@ var concertData = function(userInput){
         }
         var tracks = data.tracks.items;
 
-        for( var i=0; i< tracks.length; i++){
+        for(var i=0; i< tracks.length; i++){
             console.log(i);
             console.log("artist(s):" + tracks[i].artists[0].name);
             console.log("The song's name" +tracks[i].name);
@@ -55,3 +55,13 @@ var concertData = function(userInput){
     }
     );
 };
+
+var someData = function(){
+    false.readFile("random.txt", "utf8", function(err,data){
+        if(err){
+            return console.log(err);
+        }
+        var dataArr = data.split(",");
+        userInputData(dataArr[0],dataArr[1]);
+    });
+}
