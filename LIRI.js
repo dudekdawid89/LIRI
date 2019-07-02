@@ -2,13 +2,13 @@ require("dotenv").config();
 
 var Spotify = require("node-spotify-api");
 var keys = require("./keys.js");
-// var axios = require("axios");
+var axios = require("axios");
 // var moment = require("moment");
-// var fs = require("fs");
+var fs = require("fs");
 var spotify = new Spotify(keys.spotify);
 
 var userOption = process.argv[2];
-var userInput = process.argv[3];
+var userInput = process.argv.slice(3).join(" ");
 
 
 var userInputData = function(userOption, userInput){
@@ -21,15 +21,17 @@ var userInputData = function(userOption, userInput){
             break;
         case 'movie-this':
             movieData(userInput);
+            break;
         case 'do-what-it-says':
             someData();
+            break;
         default:
             console.log("Wrong Option. Please use this options to proceed: concert-this, spotify-this-song, movie-this, do-what-it-says");
     }
 }
 userInputData(userOption, userInput);
 
-var concertData = function(userInput){
+var songData = function(userInput){
     if(userInput === undefined){
         userInput = "The Sign"
     }
@@ -57,11 +59,33 @@ var concertData = function(userInput){
 };
 
 var someData = function(){
-    false.readFile("random.txt", "utf8", function(err,data){
+    fs.readFile("random.txt", "utf8", function(err,data){
         if(err){
             return console.log(err);
         }
         var dataArr = data.split(",");
         userInputData(dataArr[0],dataArr[1]);
     });
+}
+
+var movieData = function(userInput){
+    if (userInput === undefined){
+        userInput = "Mr. Nobody"
+        console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
+        console.log("It's on Netflix!");
+    }
+    var urlMovie = "http://www.omdbapi.com/?t="+userInput+"&y=&plot=short&apikey=trilogy";
+   
+    axios.get(urlMovie).then(
+  function(response) {
+    console.log("Title: " + response.data.Title);
+    console.log("Year: " + response.data.Year);
+    console.log("IMDB Rating: " + response.data.imdbRating);
+    console.log("Rotten Tomatoes Rating: " + response.data.Ratings[0].Value);
+    console.log("Country: " + response.data.Country);
+    console.log("Language: " + response.data.Language);
+    console.log("Plot: " + response.data.Plot);
+    console.log("Actors: " + response.data.Actors);
+  }
+);
 }
