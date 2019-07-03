@@ -3,41 +3,46 @@ require("dotenv").config();
 var Spotify = require("node-spotify-api");
 var keys = require("./keys.js");
 var axios = require("axios");
-// var moment = require("moment");
+var moment = require("moment");
 var fs = require("fs");
 var spotify = new Spotify(keys.spotify);
 
-var userOption = process.argv[2];
+var userOption = process.argv[2].toLowerCase();
 var userInput = process.argv.slice(3).join(" ");
 
+var concertData = function(){
+    var urlConcert = "https://rest.bandsintown.com/artists/" + userInput + "/events?app_id=codingbootcamp";
 
-var userInputData = function(userOption, userInput){
-    switch(userOption){
-        case 'concert-this':
-            concertData(userInput);
-            break;
-        case 'spotify-this-song':
-            songData(userInput);
-            break;
-        case 'movie-this':
-            movieData(userInput);
-            break;
-        case 'do-what-it-says':
-            someData();
-            break;
-        default:
-            console.log("Wrong Option. Please use this options to proceed: concert-this, spotify-this-song, movie-this, do-what-it-says");
-    }
+    axios.get(urlConcert).then(
+        function(response){
+            for(i=0; i< response.data.length; i++){
+                var concert = response.data[i];
+                var venueName = concert.venue.name;
+                var venueLocation = concert.venue.city;
+                var venueDate = concert.datetime;
+                var arrayDate = venueDate.split("T");
+                var newDate = moment(arrayDate[0]).format("MM/DD/YYYY");
+               
+                console.log("Concert Name:",venueName);
+                console.log("Concert location:",venueLocation);
+                console.log("Concert date:",newDate);
+                console.log("------------------------------");
+
+            }
+           
+
+        }
+    )
 }
-userInputData(userOption, userInput);
 
-var songData = function(userInput){
+var songData= function(){
     if(userInput === undefined){
         userInput = "The Sign"
     }
     spotify.search({
         type: "track",
-        query: userInput
+        query: userInput,
+        limit:1
     },
     function(err,data){
         if(err){
@@ -56,19 +61,19 @@ var songData = function(userInput){
         }
     }
     );
-};
-
+}
 var someData = function(){
     fs.readFile("random.txt", "utf8", function(err,data){
         if(err){
             return console.log(err);
         }
         var dataArr = data.split(",");
-        userInputData(dataArr[0],dataArr[1]);
+        userInput =dataArr[1];
+        userInputData(dataArr[0]);
     });
 }
 
-var movieData = function(userInput){
+var movieData = function(){
     if (userInput === undefined){
         userInput = "Mr. Nobody"
         console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
@@ -89,3 +94,28 @@ var movieData = function(userInput){
   }
 );
 }
+
+var userInputData = function(userOption){
+    
+    switch(userOption){
+        case 'concert-this':
+            concertData();
+            break;
+        case 'spotify-this-song':
+            songData();
+            break;
+        case 'movie-this':
+            movieData();
+            break;
+        case 'do-what-it-says':
+            someData();
+            break;
+        default:
+            console.log("Wrong Option. Please use this options to proceed: concert-this, spotify-this-song, movie-this, do-what-it-says");
+    }
+}
+userInputData(userOption);
+ 
+
+
+
