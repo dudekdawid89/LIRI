@@ -1,20 +1,21 @@
 # **LIRI** Application
 ## LIRI is a Language Interpretation and Recognition Interface. LIRI is a command line node app that takes in parameters and gives you back data.
-### In this case Liri giving back three types of informations:
-1. Informations about specific songs from Spotify API,
-2. Informations about specific movies form OMDG API,
-3. Informations about specific artist's concerts form Band In Town API
+### In this case Liri giving back three types of informations about:
+1. songs from Spotify API,
+2. movies from OMDG API,
+3. artist's concerts form Band In Town API
 4. Application is also able to run command using the file.txt
 
 # How to run LIRI application
 
-## To get informations about your lovely **song** you need to type command in the terminal. For example:
+# To get informations about your (you need to type command in the terminal):
+##lovely **song**:
 node liri.js spotify-this-song ***name your favorite song***
 
-## To get informations about your favorite **movie** you need to type command in the terminal. For example:
+##favorite **movie**:
 node liri.js movie-this ***name your favorite movie***
 
-## To get informations about your favorite **band**  you need to type command in the terminal. For example:
+##favorite **band**:
 node liri.js spotify-this-song ***name your favorite band***
 
 ## To run command form the file.txt (random.txt in this case) you need type command in the terminal:
